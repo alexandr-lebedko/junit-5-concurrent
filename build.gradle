@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.lebedko'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    def junitBomVersion = '5.5.2'
+    def junit4Version = '4.12'
+
+    testImplementation platform("org.junit:junit-bom:$junitBomVersion")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
+    testImplementation "junit:junit:${junit4Version}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    systemProperties(
+            'junit.jupiter.execution.parallel.enabled': true,
+            'junit.jupiter.execution.parallel.mode.default': 'same_thread',
+            'junit.jupiter.execution.parallel.mode.classes.default': 'concurrent'
+    )
+}
